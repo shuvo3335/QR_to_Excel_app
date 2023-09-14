@@ -37,7 +37,7 @@ dependencies {
     implementation 'com.google.zxing:core:3.4.1'
     implementation 'org.apache.poi:poi:5.1.0' // Core POI library
     implementation 'org.apache.poi:poi-ooxml:5.1.0' // For working with Excel files (OOXML format)
-
+    implementation 'javax.xml.stream:stax-api:1.0-2'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
