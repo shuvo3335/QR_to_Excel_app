@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -21,15 +25,21 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
+import javax.xml.stream.XMLInputFactory;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 200;
     private TextView resultTextView;
-    private int currentRowIndex = 0; // Initialize the current row index
+    private int currentRowIndex = 0, num = 0; // Initialize the current row index
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +68,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void startQRScanner() {
         IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setOrientationLocked(true);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.ALL_CODE_TYPES);
+        integrator.setPrompt("QR CODE SCANNING IN PROGRESS...");
         integrator.initiateScan();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() != null) {
@@ -74,93 +88,80 @@ public class MainActivity extends AppCompatActivity {
                 currentRowIndex++;
             } else {
                 resultTextView.setText("No QR code data found");
+                Toast.makeText(this, "No QR data found to write", Toast.LENGTH_SHORT).show();
             }
-        } else {
+        }
+        else
+        {
             super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    /*private void writeToExcel(String qrData) {
-        // Define the file path
-        String filePath = getExternalFilesDir(null) + "/qr_data.xlsx";
-
-        Workbook workbook = null;
-        Sheet sheet;
-        try {
-            File file = new File(filePath);
-            if (file.exists()) {
-                FileInputStream fileInputStream = new FileInputStream(file);
-                workbook = new XSSFWorkbook(fileInputStream);
-                sheet = workbook.getSheetAt(0);
-                int lastRowNum = sheet.getLastRowNum();
-                currentRowIndex = lastRowNum + 1;
-                fileInputStream.close();
-            } else {
-                workbook = new XSSFWorkbook();
-                sheet = workbook.createSheet("QR DATA");
-            }
-            Row row = sheet.createRow(currentRowIndex);
-            String[] dataParts = qrData.split(" ");
-            for (int i = 0; i < dataParts.length; i++) {
-                Cell cell = row.createCell(i);
-                cell.setCellValue(dataParts[i]);
-            }
-            FileOutputStream fileOutputStream = new FileOutputStream(filePath);
-            workbook.write(fileOutputStream);
-            resultTextView.append("\nData written to Excel file");
-            fileOutputStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (workbook != null) {
-                try {
-                    workbook.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-
-    }*/
-
-
     private void writeToExcel(String qrData) {
         // Define the file path
-        String filePath = getExternalFilesDir(null) + "/qr_dataa.xlsx";
+        String filePath = getExternalFilesDir(null) + "/qr_data.xls";
 
-        XSSFWorkbook workbook;
-        XSSFSheet sheet;
+        Workbook workbook;
+        Sheet sheet;
 
         // Check if the file already exists
         File file = new File(filePath);
+
         if (file.exists()) {
             try (FileInputStream fis = new FileInputStream(file)) {
+
+                //Disable namespace awareness for XML parsing
+                /*XMLInputFactory factory = XMLInputFactory.newInstance();
+                factory.setProperty(XMLInputFactory.IS_NAMESPACE_AWARE, false);*/
+                workbook = WorkbookFactory.create(fis);
+
                 // Open the existing Excel file
-                workbook = new XSSFWorkbook(fis);
+                Log.d("File exist tag", "writeToExcel: file existing error");
+//                workbook = new XSSFWorkbook();
                 sheet = workbook.getSheetAt(0); // Assuming you have only one sheet
 
                 // Find the last row with data and increment the currentRowIndex
                 int lastRowNum = sheet.getLastRowNum();
-                currentRowIndex = lastRowNum + 1;
+                currentRowIndex = lastRowNum+1;
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
             }
-        } else {
+        }
+
+        else {
             // Create a new Excel workbook and sheet if the file doesn't exist
-            workbook = new XSSFWorkbook();
-            sheet = workbook.createSheet("QR Data");
+            workbook = new HSSFWorkbook();
+            sheet = workbook.createSheet("QR Data"); //+" "+ num++
         }
 
         // Create a new row for each QR code scan and set the data in the corresponding cells
-        XSSFRow row = sheet.createRow(currentRowIndex);
+        Row row = sheet.createRow(currentRowIndex);
 
         // Split QR data by whitespace and write to separate cells in the row
         String[] dataParts = qrData.split(" ");
         for (int i = 0; i < dataParts.length; i++) {
-            XSSFCell cell = row.createCell(i);
+            Cell cell = row.createCell(i);
             cell.setCellValue(dataParts[i]);
         }
+
+            /*try (OutputStream outputStream = new FileOutputStream(filePath))
+            {
+                workbook.write(outputStream);
+                Toast.makeText(this, "error occure here", Toast.LENGTH_SHORT).show();
+                // Create a new row for each QR code scan and set the data in the corresponding cells
+                Row row = sheet.createRow(2);
+                currentRowIndex++;
+                // Split QR data by whitespace and write to separate cells in the row
+                String[] dataParts = qrData.split(" ");
+                for (int i = 0; i < dataParts.length; i++) {
+                    Cell cell = row.createCell(i);
+                    cell.setCellValue(dataParts[i]);
+            }
+        } catch (IOException e) {
+                throw new RuntimeException(e);
+            }*/
+
 
         // Save the workbook to the file
         try (FileOutputStream fos = new FileOutputStream(filePath)) {
@@ -170,6 +171,5 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-
 
 }
