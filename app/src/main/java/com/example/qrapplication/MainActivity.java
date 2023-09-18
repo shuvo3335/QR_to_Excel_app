@@ -8,31 +8,27 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFRow;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import androidx.annotation.NonNull;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFRow;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-
 import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.ss.usermodel.WorkbookFactory;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
 import javax.xml.stream.XMLInputFactory;
 
 public class MainActivity extends AppCompatActivity {
@@ -99,8 +95,20 @@ public class MainActivity extends AppCompatActivity {
 
     private void writeToExcel(String qrData) {
         // Define the file path
-        String filePath = getExternalFilesDir(null) + "/qr_data.xls";
+        //String filePath = getFilesDir() + "/qr_data.xls";
+        String currentDate = java.time.LocalDate.now().toString();
+        String folderName = "QR Scan Data";
+        String fileName = "qr_data"+ currentDate +".xls";
 
+        File internalStorageDir = getExternalFilesDir(null);
+
+        File folder = new File(internalStorageDir, folderName);
+        if (!folder.exists())
+        {
+            folder.mkdir();
+            Toast.makeText(this, "directory created", Toast.LENGTH_SHORT).show();
+        }
+        String filePath = folder.getAbsolutePath() + File.separator + fileName;
         Workbook workbook;
         Sheet sheet;
 
