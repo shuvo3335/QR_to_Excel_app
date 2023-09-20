@@ -1,32 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
+    android:layout_gravity="center"
     tools:context=".MainActivity">
 
     <Button
         android:id="@+id/scanButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Scan QR Code"
+        android:layout_width="137dp"
+        android:layout_height="48dp"
+        android:background="@drawable/buttonshape"
+        android:fontFamily="@font/sairasemicondensed_light"
+        android:shadowColor="#255F7F"
+        android:shadowDx="0"
+        android:shadowDy="0"
+        android:shadowRadius="5"
+        android:text="SCAN QR"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/resultTextView"
+        app:layout_constraintVertical_bias="0.164" />
 
     <TextView
         android:id="@+id/resultTextView"
-        android:layout_width="327dp"
-        android:layout_height="147dp"
-        android:gravity="center"
-        android:hint="here the text will appear!"
+        android:layout_width="306dp"
+        android:layout_height="120dp"
         android:layout_below="@id/scanButton"
         android:layout_centerHorizontal="true"
-        app:layout_constraintBottom_toTopOf="@+id/scanButton"
+        android:layout_marginTop="232dp"
+        android:background="@drawable/textshape"
+        android:gravity="center"
+        android:hint="here the text will appear!"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textAllCaps="true"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.495"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

@@ -27,6 +27,9 @@ import org.apache.poi.xssf.usermodel.XSSFRow;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.HashSet;
+import java.util.Set;
+
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import javax.xml.stream.XMLInputFactory;
@@ -36,6 +39,8 @@ public class MainActivity extends AppCompatActivity {
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 200;
     private TextView resultTextView;
     private int currentRowIndex = 0, num = 0; // Initialize the current row index
+
+    private Set<String> scannedQR = new HashSet<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,11 +82,18 @@ public class MainActivity extends AppCompatActivity {
         if (result != null) {
             if (result.getContents() != null) {
                 String qrData = result.getContents();
-                resultTextView.setText(qrData);
+                if (!scannedQR.contains(qrData)){
+                    scannedQR.add(qrData);
+                    resultTextView.setText(qrData);
 
-                // Parse QR data and write it to an Excel file
-                writeToExcel(qrData);
-                currentRowIndex++;
+                    // Parse QR data and write it to an Excel file
+                    writeToExcel(qrData);
+                    currentRowIndex++;
+                }
+                else {
+                    Toast.makeText(this, "THIS QR CODE IS ALREADY SCANNED", Toast.LENGTH_LONG).show();
+                }
+
             } else {
                 resultTextView.setText("No QR code data found");
                 Toast.makeText(this, "No QR data found to write", Toast.LENGTH_SHORT).show();
