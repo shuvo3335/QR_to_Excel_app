@@ -6,13 +6,12 @@
     android:layout_gravity="center"
     android:gravity="center"
     android:background="@color/black">
-
     <ImageView
-
         android:id="@+id/intro_img2"
-        android:layout_width="match_parent"
-        android:layout_height="163dp"
+        android:layout_width="410dp"
+        android:layout_height="185dp"
         android:layout_alignParentTop="true"
+        android:layout_centerInParent="true"
         android:layout_marginTop="237dp"
         android:background="@drawable/img2" />
 

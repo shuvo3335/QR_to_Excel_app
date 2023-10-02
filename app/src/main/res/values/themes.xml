@@ -10,11 +10,18 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="android:fontFamily">@font/sairasemicondensed_light</item>
     </style>
     <style name="intro_Theme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorControlNormal">@color/goldenrod</item>
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="customActionBar" parent="Theme.AppCompat.DayNight.DarkActionBar">
+        <item name="android:fontFamily">@font/sairasemicondensed_light</item>
+
+        <item name="android:textStyle">bold</item>
     </style>
 </resources>

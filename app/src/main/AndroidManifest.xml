@@ -24,13 +24,11 @@
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar"
+            android:theme="@style/customActionBar"
+            android:colorMode="default"
             android:exported="false" />
         <activity
             android:name=".CustomScannerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".MainActivity2"
             android:exported="false" />
         <activity
             android:name=".SplashActivity"
