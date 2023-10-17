@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         resultTextView = findViewById(R.id.resultTextView);
         Button scanButton = findViewById(R.id.scanButton);
         Button fileViewBtn = findViewById(R.id.fileBtn);
@@ -133,8 +134,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-
-
     private void writeToExcel(String qrData) {
         // Define the file path
         //String filePath = getFilesDir() + "/qr_data.xls";
@@ -165,8 +164,6 @@ public class MainActivity extends AppCompatActivity {
                 // Open the existing Excel file
                 sheet = workbook.getSheetAt(0); // Assuming you have only one sheet
 
-                // Check if the QR data is already in the HashSet
-                if (!scannedQR.contains(qrData)) {
                     // Find the last row with data and increment the currentRowIndex
                     int lastRowNum = sheet.getLastRowNum();
                     currentRowIndex = lastRowNum + 1;
@@ -191,11 +188,11 @@ public class MainActivity extends AppCompatActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                } else {
-                    // Handle the case when the QR data is a duplicate
-                    resultTextView.setText("SCAN NEW QR CODE TO GET DATA");
-                    Toast.makeText(this, "THIS QR CODE IS ALREADY SCANNED", Toast.LENGTH_LONG).show();
-                }
+//                 else {
+//                    // Handle the case when the QR data is a duplicate
+//                    resultTextView.setText("SCAN NEW QR CODE TO GET DATA");
+//                    Toast.makeText(this, "THIS QR CODE IS ALREADY SCANNED", Toast.LENGTH_LONG).show();
+//                }
             } catch (IOException e) {
                 e.printStackTrace();
                 return;
@@ -224,12 +221,9 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             // Increment the currentRowIndex
             currentRowIndex++;
         }
     }
-
-
-
 }
+
