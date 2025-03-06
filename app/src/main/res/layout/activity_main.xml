@@ -57,7 +57,7 @@
         android:shadowDx="0"
         android:shadowDy="0"
         android:shadowRadius="5"
-        android:visibility="invisible"
+        android:visibility="visible"
         android:text="View files"
         android:textColor="#FFFFFF"
         android:textSize="20sp"

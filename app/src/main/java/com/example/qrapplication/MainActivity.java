@@ -56,18 +56,7 @@ public class MainActivity extends AppCompatActivity {
         Button fileViewBtn = findViewById(R.id.fileBtn);
 
         fileViewBtn.setOnClickListener(view -> {
-            String folderPath = getExternalFilesDir(null)+ "/QR Scan Data";
-            // Create a Uri for the folder path
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            Uri uri = Uri.parse(folderPath);
-            intent.setDataAndType(uri, "*/*");
-
-            if(intent.resolveActivity(getPackageManager())!=null){
-                startActivity(intent);
-            }
-            else {
-                Toast.makeText(this, "No file Manager App found", Toast.LENGTH_LONG).show();
-            }
+            openQRFolder();
         });
 
 
@@ -94,6 +83,41 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
     }
+
+    private void openQRFolder() {
+        File folder = new File(getExternalFilesDir(null), "QR Scan Data");
+
+        //for samsung device only
+        /*if (folder.exists()) {
+            Uri uri = Uri.parse(folder.getAbsolutePath());
+
+            Intent intent = new Intent("com.sec.android.app.myfiles.PICK_DATA");
+            intent.putExtra("com.sec.android.app.myfiles.extra.START_PATH", folder.getAbsolutePath());
+            intent.setPackage("com.sec.android.app.myfiles");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+            try {
+                startActivity(intent);
+            } catch (Exception e) {
+                Toast.makeText(this, "Samsung My Files not found!", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Folder does not exist!", Toast.LENGTH_SHORT).show();
+        }*/
+        //for all actually not possible
+        if (folder.exists()) {
+            Uri uri = Uri.parse(folder.getAbsolutePath());
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(uri, "*/*");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Folder does not exist!", Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
     private void startQRScanner() {
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.setOrientationLocked(true);
